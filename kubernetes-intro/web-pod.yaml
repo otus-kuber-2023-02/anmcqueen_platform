@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod # Объект, который создаем
+metadata:
+  name: web # Название Pod
+  labels: # Метки в формате key: value
+    key: app
+spec: # Описание Pod
+  initContainers:
+    - name: init
+      image: busybox:1.31.0
+      command: ['sh', '-c', 'wget -O- https://tinyurl.com/otus-k8s-intro | sh']
+      volumeMounts:
+        - name: app
+          mountPath: /app
+  containers: # Описание контейнеров внутри Pod
+  - name: web # Название контейнера
+    image: anmcqueen/mcqueen_repo:hw # Образ из которого создается контейнер
+    volumeMounts:
+    - name: app
+      mountPath: /app
+  volumes:
+  - name: app
+    emptyDir: {}
